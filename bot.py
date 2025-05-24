@@ -1,29 +1,22 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-import os
-import asyncio
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 
-# /start komandasi uchun funksiya
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    group_link = "https://t.me/nokis_tashken_almati"
-    keyboard = [[InlineKeyboardButton("👥 Guruhga qo‘shilish", url=group_link)]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+# /start buyrug‘iga javob beradigan funksiya
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("Assalomu alaykum! Botimizga xush kelibsiz 😊")
 
-    await update.message.reply_text(
-        "Assalomu alaykum!\n\nQuyidagi tugma orqali guruhimizga qo‘shiling: \n"
-        "https://t.me/nokis_tashken_almati\n"
-        "https://t.me/tashkent_nokis1",
-        reply_markup=reply_markup
-    )
-
-# Railway uchun oddiy ishga tushirish (asyncio.run() ishlatmasdan)
+# Botni ishga tushuruvchi asosiy funksiya
 async def main():
-    token = os.environ.get("BOT_TOKEN")  # Railway'da ENV o'rnatiladi
-    app = ApplicationBuilder().token(token).build()
-    app.add_handler(CommandHandler("start", start))
+    # Bot tokeningizni shu yerga yozing
+    application = Application.builder().token("BOT_TOKENINGIZ").build()
 
-    await app.run_polling()  # Bu o'zi event loopni boshqaradi
+    # /start buyrug‘i uchun handler qo‘shiladi
+    application.add_handler(CommandHandler("start", start))
 
-# Railway bilan mos - faqat asyncio event loop ishlatiladi
+    # Botni ishga tushuradi
+    await application.run_polling()
+
+# Agar fayl asosiy fayl bo‘lsa, ishga tushur
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(main())
