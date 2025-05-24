@@ -2,9 +2,6 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import os
 import asyncio
-import nest_asyncio
-
-nest_asyncio.apply()  # 🔧 mavjud event loop ga tuzatish
 
 # /start komandasi uchun funksiya
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -19,13 +16,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-# Botni ishga tushirish
+# Railway uchun oddiy ishga tushirish (asyncio.run() ishlatmasdan)
 async def main():
-    token = os.environ.get("BOT_TOKEN")
+    token = os.environ.get("BOT_TOKEN")  # Railway'da ENV o'rnatiladi
     app = ApplicationBuilder().token(token).build()
-
     app.add_handler(CommandHandler("start", start))
-    await app.run_polling()
 
+    await app.run_polling()  # Bu o'zi event loopni boshqaradi
+
+# Railway bilan mos - faqat asyncio event loop ishlatiladi
 if __name__ == "__main__":
     asyncio.run(main())
